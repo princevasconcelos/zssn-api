@@ -1,9 +1,11 @@
-let express = require("express");
+const express = require('express')
+const bodyParser = require('body-parser')
 
-let app = express();
+const app = express()
 
-app.get("/", function(req, res) {
-  res.send("Hello world");
-});
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
-app.listen(3000);
+app.use(require('./router'))
+
+app.listen(3000)
