@@ -70,10 +70,37 @@ const PeopleController = {
           new: true
         }
       )
-      console.log(id, data)
       response.send(data)
     } catch (error) {
       response.status(400).send({ error: 'Bad request' })
+    }
+  },
+
+  async report (request, response) {
+    try {
+      const reportedId = request.body.id
+      const reportedData = await People.findById(reportedId)
+      let { infectionCount, infected } = reportedData
+      if (++infectionCount >= 3) infected = true
+      const reportedUpdated = await People.findByIdAndUpdate(
+        reportedId,
+        {
+          infectionCount,
+          infected
+        },
+        { new: true }
+      )
+
+      const userId = request.params.id
+      let { reports } = await People.findById(userId)
+      if (!reports.includes(reportedId)) {
+        reports.push(reportedId)
+        await People.findByIdAndUpdate(userId, { reports }, { new: true })
+      }
+
+      return response.status(200).send(reportedUpdated)
+    } catch (error) {
+      response.status(400).send({ error: 'Bad request ' })
     }
   }
 }
