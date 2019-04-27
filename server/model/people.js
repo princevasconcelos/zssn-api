@@ -1,47 +1,63 @@
 const mongoose = require('../database/mongo')
 
-const PeopleSchema = new mongoose.Schema({
-  location: {
-    type: String
-  },
+const PeopleSchema = new mongoose.Schema(
+  {
+    location: {
+      type: String
+    },
 
-  name: {
-    type: String,
-    required: true
-  },
+    name: {
+      type: String,
+      required: true
+    },
 
-  age: {
-    type: Number,
-    required: true
-  },
+    age: {
+      type: Number,
+      required: true
+    },
 
-  gender: {
-    type: String,
-    required: true
-  },
+    gender: {
+      type: String,
+      required: true
+    },
 
-  lonlat: {
-    type: String
-  },
+    lonlat: {
+      type: String
+    },
 
-  items: {
-    type: String,
-    required: true
-  },
+    items: {
+      type: String,
+      required: true
+    },
 
-  infected: {
-    type: Boolean
-  },
+    reports: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'People'
+      }
+    ],
 
-  created_at: {
-    type: Date,
-    default: Date.now()
-  },
+    infectionCount: {
+      type: Number,
+      default: 0
+    },
 
-  updated_at: {
-    type: Date
-  }
-})
+    infected: {
+      type: Boolean,
+      default: false
+    },
+
+    created_at: {
+      type: Date,
+      default: Date.now()
+    },
+
+    updated_at: {
+      type: Date
+    }
+  },
+  { versionKey: false }
+)
 
 const People = mongoose.model('People', PeopleSchema)
 
