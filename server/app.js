@@ -8,4 +8,4 @@ app.use(bodyParser.json())
 
 app.use(require('./router'))
 
-app.listen(3000)
+app.listen(3000, () => console.log('Node running on port 3000'))
