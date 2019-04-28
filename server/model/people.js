@@ -1,14 +1,13 @@
 const mongoose = require('../database/mongo')
+const Schema = mongoose.Schema
 
-const PeopleSchema = new mongoose.Schema(
+const PeopleSchema = new Schema(
   {
-    location: {
-      type: String
-    },
-
     name: {
       type: String,
-      required: true
+      required: true,
+      trim: true,
+      unique: true
     },
 
     age: {
@@ -18,21 +17,26 @@ const PeopleSchema = new mongoose.Schema(
 
     gender: {
       type: String,
+      trim: true,
       required: true
     },
 
     lonlat: {
-      type: String
+      type: String,
+      trim: true
     },
 
-    items: {
-      type: String,
-      required: true
-    },
+    items: [
+      {
+        name: { type: String },
+        quantity: { type: Number },
+        points: { type: Number }
+      }
+    ],
 
     reports: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'People'
       }
     ],
