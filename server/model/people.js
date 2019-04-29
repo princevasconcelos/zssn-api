@@ -51,13 +51,14 @@ const PeopleSchema = new Schema(
       default: false
     },
 
-    created_at: {
+    createdAt: {
       type: Date,
       default: Date.now()
     },
 
-    updated_at: {
-      type: Date
+    updatedAt: {
+      type: Date,
+      default: Date.now()
     }
   },
   { versionKey: false }
