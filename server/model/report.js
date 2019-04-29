@@ -7,25 +7,32 @@ const ReportSchema = mongoose.Schema(
       default: 0
     },
     infectedPercent: {
-      type: String
+      type: Number,
+      default: 0
     },
     nonInfectedPercent: {
-      type: String
+      type: Number,
+      default: 0
     },
     averageWaterPerSurvivor: {
-      type: String
+      type: Number,
+      default: 0
     },
     averageFoodPerSurvivor: {
-      type: String
+      type: Number,
+      default: 0
     },
     averageMedicationPerSurvivor: {
-      type: String
+      type: Number,
+      default: 0
     },
     averageAmmunitionPerSurvivor: {
-      type: String
+      type: Number,
+      default: 0
     },
     pointsLostByInfection: {
-      type: String
+      type: Number,
+      default: 0
     }
   },
   { versionKey: false }
