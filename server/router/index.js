@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const PeopleController = require('../controllers/PeopleController')
+const ReportController = require('../controllers/ReportController')
 
 router.get('/api/people.json', PeopleController.get)
 router.get('/api/people/:id.json', PeopleController.getById)
@@ -13,5 +14,8 @@ router.post(
 )
 
 router.patch('/api/people/:id.json', PeopleController.update)
+
+router.get('/api/report.json', ReportController.get)
+router.post('/api/report.json', ReportController.create)
 
 module.exports = router
