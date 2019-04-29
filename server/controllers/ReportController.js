@@ -2,15 +2,6 @@ const PeopleService = require('../service/PeopleService')
 const ReportService = require('../service/ReportService')
 
 const ReportController = {
-  create: async (request, response) => {
-    try {
-      const data = await ReportService.create({})
-      response.send(data)
-    } catch (error) {
-      response.status(500).send({ error: 'Internal Server Error' })
-    }
-  },
-
   get: async (request, response) => {
     try {
       const peopleData = await PeopleService.getAll()
@@ -31,8 +22,6 @@ const ReportController = {
       const pointsLostByInfection = ReportService.getInfectedPoints(
         peopleData.filter(e => e.infected)
       )
-
-      console.log(pointsLostByInfection)
 
       const send = {
         totalSurvivors,

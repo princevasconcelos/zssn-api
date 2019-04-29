@@ -16,6 +16,5 @@ router.post(
 router.patch('/api/people/:id.json', PeopleController.update)
 
 router.get('/api/report.json', ReportController.get)
-router.post('/api/report.json', ReportController.create)
 
 module.exports = router
