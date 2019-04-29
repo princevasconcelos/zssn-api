@@ -1,24 +1,23 @@
-const People = require('../model/people')
-
+const PeopleService = require('../service/PeopleService')
 const ItemService = require('../service/ItemService')
 
 const PeopleController = {
   async get (request, response) {
     try {
-      const data = await People.find()
+      const data = await PeopleService.getAll()
       return response.status(200).send(data)
     } catch (error) {
-      response.status(500).send({ error: 'Internval Server Error' })
+      response.status(500).send({ error: 'Internal Server Error' })
     }
   },
 
   async getById (request, response) {
     try {
       const id = request.params.id
-      const data = await People.findById(id)
+      const data = await PeopleService.getById(id)
       return response.status(200).send(data)
     } catch (error) {
-      response.status(404).send('Id not found')
+      response.status(404).send('ID not found')
     }
   },
 
@@ -34,7 +33,7 @@ const PeopleController = {
 
       const itemsData = await ItemService.create(items)
 
-      const data = await People.create({
+      const data = await PeopleService.create({
         name,
         age,
         gender,
@@ -42,7 +41,7 @@ const PeopleController = {
         items: itemsData
       })
 
-      return response.send(data)
+      return response.status(201).send(data)
     } catch (errors) {
       response.status(400).send({ error: 'Bad request' })
     }
@@ -57,22 +56,15 @@ const PeopleController = {
       const age = body.person['age']
       const gender = body.person['gender']
       const lonlat = body.person['lonlat']
-      const items = body.items
-      console.log(name, age, gender, lonlat, items)
-      const data = await People.findByIdAndUpdate(
-        id,
-        {
-          name,
-          age,
-          gender,
-          lonlat,
-          items
-        },
-        {
-          new: true
-        }
-      )
-      response.send(data)
+
+      const data = await PeopleService.update(id, {
+        name,
+        age,
+        gender,
+        lonlat
+      })
+
+      return response.status(200).send(data)
     } catch (error) {
       response.status(400).send({ error: 'Bad request' })
     }
@@ -81,23 +73,19 @@ const PeopleController = {
   async report (request, response) {
     try {
       const reportedId = request.body.id
-      const reportedData = await People.findById(reportedId)
+      const reportedData = await PeopleService.getById(reportedId)
       let { infectionCount, infected } = reportedData
       if (++infectionCount >= 3) infected = true
-      const reportedUpdated = await People.findByIdAndUpdate(
-        reportedId,
-        {
-          infectionCount,
-          infected
-        },
-        { new: true }
-      )
+      const reportedUpdated = await PeopleService.update(reportedId, {
+        infectionCount,
+        infected
+      })
 
       const userId = request.params.id
-      let { reports } = await People.findById(userId)
+      let { reports } = await PeopleService.getById(userId)
       if (!reports.includes(reportedId)) {
         reports.push(reportedId)
-        await People.findByIdAndUpdate(userId, { reports }, { new: true })
+        await PeopleService.update(userId, { reports })
       }
 
       return response.status(200).send(reportedUpdated)
@@ -115,8 +103,8 @@ const PeopleController = {
       const consumerPick = body.consumer['pick']
       const consumerPay = body.consumer['payment']
 
-      const sellerData = await People.findById(sellerId)
-      const consumerData = await People.findById(consumerId)
+      const sellerData = await PeopleService.getById(sellerId)
+      const consumerData = await PeopleService.getById(consumerId)
 
       const itemsData = await ItemService.trade(
         { consumerData, consumerPay },
@@ -125,32 +113,26 @@ const PeopleController = {
 
       const { sellerItems, consumerItems } = itemsData
 
-      const seller = await People.findByIdAndUpdate(
-        sellerId,
-        {
-          items: sellerItems
-        },
-        { new: true }
-      )
+      const seller = await PeopleService.update(sellerId, {
+        items: sellerItems
+      })
 
-      const consumer = await People.findByIdAndUpdate(
-        consumerId,
-        {
-          items: consumerItems
-        },
-        { new: true }
-      )
+      const consumer = await PeopleService.update(consumerId, {
+        items: consumerItems
+      })
 
-      response.send({ seller: seller.items, consumer: consumer.items })
+      return response
+        .status(200)
+        .send({ seller: seller.items, consumer: consumer.items })
     } catch (error) {
       response.status(400).send({ error: 'Bad request' })
     }
   },
 
   async getItems (request, response) {
-    const id = request.params.id
     try {
-      const data = await People.findById(id)
+      const id = request.params.id
+      const data = await PeopleService.getById(id)
       return response.status(200).send(data.items)
     } catch (error) {
       response.status(404).send({ error: 'Id not found' })
