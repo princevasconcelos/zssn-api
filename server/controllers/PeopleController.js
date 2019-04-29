@@ -56,12 +56,14 @@ const PeopleController = {
       const age = body.person['age']
       const gender = body.person['gender']
       const lonlat = body.person['lonlat']
+      const updatedAt = Date.now()
 
       const data = await PeopleService.update(id, {
         name,
         age,
         gender,
-        lonlat
+        lonlat,
+        updatedAt
       })
 
       return response.status(200).send(data)
@@ -83,6 +85,7 @@ const PeopleController = {
 
       const userId = request.params.id
       let { reports } = await PeopleService.getById(userId)
+
       if (!reports.includes(reportedId)) {
         reports.push(reportedId)
         await PeopleService.update(userId, { reports })
